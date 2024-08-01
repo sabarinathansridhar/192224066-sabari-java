@@ -1,0 +1,176 @@
+import java.util.Scanner;
+
+abstract class BankAccount {
+    protected String accountNumber;
+    protected double balance;
+    protected String accountType;
+
+    public BankAccount(String accountNumber, double balance, String accountType) {
+        this.accountNumber = accountNumber;
+        this.balance = balance;
+        this.accountType = accountType;
+    }
+
+    public abstract void deposit(double amount);
+    public abstract void withdraw(double amount);
+    public abstract void applyMonthlyUpdate();
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void displayAccountInfo() {
+        System.out.println("Account Number: " + accountNumber);
+        System.out.println("Account Type: " + accountType);
+        System.out.println("Balance: $" + String.format("%.2f", balance));
+    }
+}
+
+class SavingsAccount extends BankAccount {
+    private static final double INTEREST_RATE = 0.04;
+
+    public SavingsAccount(String accountNumber, double balance) {
+        super(accountNumber, balance, "Savings");
+    }
+
+    @Override
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+        } else {
+            System.out.println("Deposit amount must be positive.");
+        }
+    }
+
+    @Override
+    public void withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+        } else {
+            System.out.println("Insufficient balance or invalid amount.");
+        }
+    }
+
+    @Override
+    public void applyMonthlyUpdate() {
+        balance += balance * INTEREST_RATE;
+    }
+}
+
+class CheckingAccount extends BankAccount {
+    private static final double MIN_BALANCE = 500;
+    private static final double FEE = 50;
+
+    public CheckingAccount(String accountNumber, double balance) {
+        super(accountNumber, balance, "Checking");
+    }
+
+    @Override
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+        } else {
+            System.out.println("Deposit amount must be positive.");
+        }
+    }
+
+    @Override
+    public void withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            if (balance < MIN_BALANCE) {
+                balance -= FEE;
+                System.out.println("Account balance below minimum. Fee of $" + FEE + " charged.");
+            }
+        } else {
+            System.out.println("Insufficient balance or invalid amount.");
+        }
+    }
+
+    @Override
+    public void applyMonthlyUpdate() {
+        if (balance < MIN_BALANCE) {
+            balance -= FEE;
+            System.out.println("Account balance below minimum. Fee of $" + FEE + " charged.");
+        }
+    }
+}
+
+public class BankAccountManager {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Create some accounts for demonstration
+        BankAccount savings = new SavingsAccount("SA123", 1000);
+        BankAccount checking = new CheckingAccount("CA456", 600);
+
+        while (true) {
+            System.out.println("\nBank Account Management System");
+            System.out.println("1. Deposit");
+            System.out.println("2. Withdraw");
+            System.out.println("3. View Balance");
+            System.out.println("4. Apply Monthly Update");
+            System.out.println("5. Exit");
+            System.out.print("Choose an option: ");
+            
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter account type (Savings/Checking): ");
+                    String typeDeposit = scanner.nextLine();
+                    System.out.print("Enter amount to deposit: $");
+                    double depositAmount = scanner.nextDouble();
+                    if (typeDeposit.equalsIgnoreCase("Savings")) {
+                        savings.deposit(depositAmount);
+                    } else if (typeDeposit.equalsIgnoreCase("Checking")) {
+                        checking.deposit(depositAmount);
+                    } else {
+                        System.out.println("Invalid account type.");
+                    }
+                    break;
+
+                case 2:
+                    System.out.print("Enter account type (Savings/Checking): ");
+                    String typeWithdraw = scanner.nextLine();
+                    System.out.print("Enter amount to withdraw: $");
+                    double withdrawAmount = scanner.nextDouble();
+                    if (typeWithdraw.equalsIgnoreCase("Savings")) {
+                        savings.withdraw(withdrawAmount);
+                    } else if (typeWithdraw.equalsIgnoreCase("Checking")) {
+                        checking.withdraw(withdrawAmount);
+                    } else {
+                        System.out.println("Invalid account type.");
+                    }
+                    break;
+
+                case 3:
+                    System.out.print("Enter account type (Savings/Checking): ");
+                    String typeView = scanner.nextLine();
+                    if (typeView.equalsIgnoreCase("Savings")) {
+                        savings.displayAccountInfo();
+                    } else if (typeView.equalsIgnoreCase("Checking")) {
+                        checking.displayAccountInfo();
+                    } else {
+                        System.out.println("Invalid account type.");
+                    }
+                    break;
+
+                case 4:
+                    savings.applyMonthlyUpdate();
+                    checking.applyMonthlyUpdate();
+                    System.out.println("Monthly updates applied.");
+                    break;
+
+                case 5:
+                    System.out.println("Exiting...");
+                    scanner.close();
+                    return;
+
+                default:
+                    System.out.println("Invalid option. Please try again.");
+            }
+        }
+    }
+}
