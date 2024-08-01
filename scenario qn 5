@@ -1,0 +1,48 @@
+import java.util.Scanner;
+
+public class PalindromeChecker {
+
+    // Method to check if an integer is a palindrome
+    private static boolean isPalindrome(int number) {
+        // Convert number to its absolute value to handle negative numbers
+        int originalNumber = Math.abs(number);
+        int reversedNumber = 0;
+        int temp = originalNumber;
+
+        // Reverse the digits of the number
+        while (temp > 0) {
+            int digit = temp % 10;
+            reversedNumber = reversedNumber * 10 + digit;
+            temp /= 10;
+        }
+
+        // Check if the reversed number is equal to the original number
+        return originalNumber == reversedNumber;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Prompt user for input
+        System.out.print("Enter an integer to check if it is a palindrome: ");
+        int number;
+        
+        // Read and validate user input
+        try {
+            number = scanner.nextInt();
+        } catch (Exception e) {
+            System.out.println("Error: Please enter a valid integer.");
+            return;
+        }
+
+        // Check if the number is a palindrome and print the result
+        if (isPalindrome(number)) {
+            System.out.println(number + " is a palindrome.");
+        } else {
+            System.out.println(number + " is not a palindrome.");
+        }
+        
+        // Close the scanner
+        scanner.close();
+    }
+}
