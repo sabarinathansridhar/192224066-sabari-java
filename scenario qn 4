@@ -1,0 +1,72 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class MaxMinFinder {
+
+    // Method to find the Mth maximum number
+    private static int findMthMaximum(int[] array, int M) {
+        if (M < 1 || M > array.length) {
+            throw new IllegalArgumentException("M is out of range.");
+        }
+        int[] sortedArray = array.clone();
+        Arrays.sort(sortedArray);
+        return sortedArray[sortedArray.length - M];
+    }
+
+    // Method to find the Nth minimum number
+    private static int findNthMinimum(int[] array, int N) {
+        if (N < 1 || N > array.length) {
+            throw new IllegalArgumentException("N is out of range.");
+        }
+        int[] sortedArray = array.clone();
+        Arrays.sort(sortedArray);
+        return sortedArray[N - 1];
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Prompt user for array input
+        System.out.println("Enter the array elements separated by spaces:");
+        String[] input = scanner.nextLine().split("\\s+");
+        int[] array = new int[input.length];
+
+        // Convert input strings to integers
+        try {
+            for (int i = 0; i < input.length; i++) {
+                array[i] = Integer.parseInt(input[i]);
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Please enter valid integers.");
+            return;
+        }
+
+        // Prompt user for M and N values
+        System.out.print("Enter the value of M (to find Mth maximum number): ");
+        int M = scanner.nextInt();
+        System.out.print("Enter the value of N (to find Nth minimum number): ");
+        int N = scanner.nextInt();
+
+        // Handle edge cases for M and N values
+        if (array.length == 0) {
+            System.out.println("Error: The array is empty.");
+            return;
+        }
+
+        try {
+            int MthMax = findMthMaximum(array, M);
+            int NthMin = findNthMinimum(array, N);
+
+            int sum = MthMax + NthMin;
+            int difference = MthMax - NthMin;
+
+            // Output results
+            System.out.println("Mth maximum number: " + MthMax);
+            System.out.println("Nth minimum number: " + NthMin);
+            System.out.println("Sum: " + sum);
+            System.out.println("Difference: " + difference);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
