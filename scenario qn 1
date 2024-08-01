@@ -1,0 +1,28 @@
+
+public class Main {
+    public static void main(String[] args) {
+        // Check if exactly 3 arguments are provided
+        if (args.length != 3) {
+            System.out.println("Error: Please provide exactly three integer arguments.");
+            return;
+        }
+
+        // Try to parse the arguments as integers
+        int num1, num2, num3;
+        try {
+            num1 = Integer.parseInt(args[0]);
+            num2 = Integer.parseInt(args[1]);
+            num3 = Integer.parseInt(args[2]);
+        } catch (NumberFormatException e) {
+            System.out.println("Error: All arguments must be valid integers.");
+            return;
+        }
+
+        // Compare the integers and print the appropriate message
+        if (num1 == num2 && num2 == num3) {
+            System.out.println("equal");
+        } else {
+            System.out.println("not equal");
+        }
+    }
+}
